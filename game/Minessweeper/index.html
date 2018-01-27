@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="stylesheets/index.css"/>
+	<link rel="stylesheet" type="text/css" href="stylesheets/minessweeper.css"/>
+</head>
+<body>
+	<div id="i_wrapper" class="i_wrapper">
+		<div class="menu_con">
+			<div class="menu" v-bind:class="{menuExpand:menuIsExpand}">
+				<div class="nav">
+					<ul class="level" id="level">
+						<li v-for="level in level_data" 
+							:key="level.id" @click="startGame(level)">
+							<span class="iconfont customIconfont" v-html="level.icon"></span>
+							{{level.level}}
+							{{level.byname}}
+						</li>
+					</ul>
+				</div>
+				<div class="menu_button">
+					<span id="menu_button" class="iconfont customIconfont" @click="menuToggle">&#xe73d;</span>MinesSweeper
+				</div>
+			</div>
+		</div>
+		
+		<div class="game_body" ref="gameBody">
+			<div class="game_info" v-show="gameStatus">
+				<div>
+					<span class="iconfont">&#xe626;</span>
+					<span id="time">{{time}}</span>
+					<span class="iconfont">&#xe65f;</span>
+					<span id="flags">{{flags}}</span>
+				</div>
+			</div>
+			<div class="game_over_msg" v-show="computeGameOverMsg">{{gameOverMsg}}</div>
+			<div class="game_paused" v-show="gameStatus==2">游戏暂停</div>
+			<!-- 游戏面板 -->
+			<div id="mines_con" class="mines_con"
+				v-bind:class="{mines_con_active:minesConIsActive}" 
+				ref="minesCon"
+				v-show="gameStatus" 
+				:style="{width:computeConWidth,height:computeConHeight,transform:transformScale}"
+				@wheel.prevent="scaleCompute"
+				@mousedown.prevent="minesConMouseDown"
+				@mouseup.prevent="minesConMouseUp"
+				>
+				<div 
+					v-for="piece in gameData" 
+					:key="piece.id" 
+					@contextmenu.prevent="contextFun(piece.index)" 
+					@mousedown.prevent="pieceMouseDown(piece.index)"
+					@mouseup.prevent="pieceMouseUp(piece.index)">
+					<span 
+						v-bind:class="[pieceView(piece.pieceState),('wordColor'+piece.html)]"> {{piece.html}}
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="game_ctrl_con" v-show="gameStatus">
+			<div class="game_ctrl_button" @click="gameCtrlToggle">
+				<span class="iconfont">&#xe73e;</span>
+			</div>
+			<div class="game_ctrl_option" v-bind:class="{gameCtrlExpand:gameCtrlIsExpand}">
+				<span class="iconfont" title="新游戏" 
+					@click="gameCtrl('new')">
+					&#xe685;
+				</span>
+				<span class="iconfont" title="暂停" 
+					@click="gameCtrl('paused')"
+					v-show="gameStatus!=2">
+					&#xe7af;
+				</span>
+				<span class="iconfont" title="开始" 
+					@click="gameCtrl('start')"
+					v-show="gameStatus==2">
+					&#xe769;
+				</span>
+				<span class="iconfont" title="重新开始本局游戏" 
+					@click="gameCtrl('restart')">
+					&#xe6c3;
+				</span>
+				<span class="iconfont" title="关闭游戏" 
+					@click="gameCtrl('close')">
+					&#xe60d;
+				</span>
+			</div>
+		</div>
+	</div>	
+	<script src="js/vue.js"></script>
+	<script src="js/minessweeper.js"></script>
+</body>
+</html>

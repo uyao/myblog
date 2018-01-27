@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="test" style="height: 300px;width:200px;"></div>
+	<script type="text/javascript" src="js/mousewheel.js"></script>
+	<script type="text/javascript">
+		var test=document.getElementById('test')
+		addEvent(test, "mousewheel", function(event) {
+		    if (event.delta < 0) {
+		    	console.log("鼠标向上滚了！");
+		    }else{
+		    	console.log("鼠标向下滚了！");
+		    }
+		});
+	</script>
+</body>
+</html>
